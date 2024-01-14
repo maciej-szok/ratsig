@@ -1,31 +1,27 @@
-from pydantic import BaseModel
 from typing import Optional
 
-from app.models.tag import TagType
+from pydantic import BaseModel
 
 
 # Shared properties
-class TagBase(BaseModel):
-    type: TagType
-    text: str | None
+class EntryBase(BaseModel):
+    content: Optional[str] = None
 
 
 # Properties to receive on item creation
-class TagCreate(TagBase):
-    text: str
-    type: TagType
+class EntryCreate(EntryBase):
+    content: str
 
 
 # Properties to receive on item update
-class TagUpdate(TagBase):
+class EntryUpdate(EntryBase):
     pass
 
 
 # Properties shared by models stored in DB
-class TagInDBBase(TagBase):
+class EntryInDBBase(EntryBase):
     id: int
-    type: TagType
-    text: str
+    content: str
     owner_id: int
 
     class Config:
@@ -33,10 +29,10 @@ class TagInDBBase(TagBase):
 
 
 # Properties to return to client
-class Tag(TagInDBBase):
+class Entry(EntryInDBBase):
     pass
 
 
 # Properties properties stored in DB
-class TagInDB(TagInDBBase):
+class EntryInDB(EntryInDBBase):
     pass
