@@ -27,4 +27,4 @@ class Tag(Base):
     owner_id = Column(Integer, ForeignKey("user.id"))
     owner = relationship("User", back_populates="tags")
 
-    entry_tag = relationship("EntryTag", back_populates="tag")
+    entry_tag = relationship("EntryTag", secondary="entry_tags", back_populates="tag")

@@ -2,6 +2,8 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from app.schemas.tag import TagBase
+
 
 # Shared properties
 class EntryBase(BaseModel):
@@ -15,7 +17,7 @@ class EntryCreate(EntryBase):
 
 # Properties to receive on item update
 class EntryUpdate(EntryBase):
-    pass
+    tags: Optional[list[int]] = None
 
 
 # Properties shared by models stored in DB
@@ -30,7 +32,7 @@ class EntryInDBBase(EntryBase):
 
 # Properties to return to client
 class Entry(EntryInDBBase):
-    pass
+    tags: list[TagBase]
 
 
 # Properties properties stored in DB
