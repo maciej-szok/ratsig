@@ -10,7 +10,7 @@ from app.crud.crud_entry_tag import MissingDatabaseObject
 router = APIRouter()
 
 
-@router.get("/", response_model=None) #List[schemas.Entry]
+@router.get("/", response_model=list[schemas.Entry])
 def read_entries(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
@@ -26,9 +26,6 @@ def read_entries(
         entries = crud.entry.get_multi_by_owner(
             db=db, owner_id=current_user.id, skip=skip, limit=limit
         )
-    for ent in entries:
-        ent.tags = crud.entry_tag.get_tags_by_entry(db=db, entry_id=ent.id)
-        print(ent.tags)
 
     return entries
 
@@ -47,7 +44,7 @@ def create_entry(
     return tag
 
 
-@router.put("/{id}", response_model=schemas.Entry)
+@router.put("/{id}", response_model=None)
 def update_entry(
     *,
     db: Session = Depends(deps.get_db),

@@ -10,10 +10,11 @@ if TYPE_CHECKING:
 
 
 class EntryTag(Base):
+    __tablename__ = "entrytag"
     id = Column(Integer, primary_key=True, index=True)
 
-    entry_id = Column(Integer, ForeignKey("entry.id"))
-    entry = relationship("Entry", back_populates="entry_tag")
-    tag_id = Column(Integer, ForeignKey("tag.id"))
-    tag = relationship("Tag", back_populates="entry_tag")
+    entry_id = Column(Integer, ForeignKey("entries.id"))
+    # entry = relationship("Entry", back_populates="entry_tag")
+    tag_id = Column(Integer, ForeignKey("tags.id"))
+    # tag = relationship("Tag", back_populates="entry_tag")
 

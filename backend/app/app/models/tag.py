@@ -20,6 +20,8 @@ if TYPE_CHECKING:
 
 
 class Tag(Base):
+    __tablename__ = "tags"
+
     id = Column(Integer, primary_key=True, index=True)
     type = Column(Enum(TagType))
     text = Column(String)
@@ -27,4 +29,4 @@ class Tag(Base):
     owner_id = Column(Integer, ForeignKey("user.id"))
     owner = relationship("User", back_populates="tags")
 
-    entry_tag = relationship("EntryTag", secondary="entry_tags", back_populates="tag")
+    entries = relationship("Entry", secondary="entrytag", back_populates="tags")
