@@ -4,4 +4,3 @@ from .token import Token, TokenPayload
 from .user import User, UserCreate, UserInDB, UserUpdate
 from .tag import Tag, TagCreate, TagInDB, TagUpdate
 from .entry import Entry, EntryCreate, EntryInDB, EntryUpdate
-from .entry_tag import EntryTag, EntryTagCreate, EntryTagInDB, EntryTagUpdate

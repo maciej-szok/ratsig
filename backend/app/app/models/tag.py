@@ -7,6 +7,8 @@ from app.db.base_class import Base
 
 import enum
 
+from .entry_tag import association_table
+
 
 class TagType(enum.Enum):
     place = "place"
@@ -20,7 +22,7 @@ if TYPE_CHECKING:
 
 
 class Tag(Base):
-    __tablename__ = "tags"
+    __tablename__ = "tag"
 
     id = Column(Integer, primary_key=True, index=True)
     type = Column(Enum(TagType))
@@ -29,4 +31,4 @@ class Tag(Base):
     owner_id = Column(Integer, ForeignKey("user.id"))
     owner = relationship("User", back_populates="tags")
 
-    entries = relationship("Entry", secondary="entrytag", back_populates="tags")
+    entries = relationship('Entry', secondary=association_table, back_populates="tags")

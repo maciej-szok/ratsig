@@ -1,3 +1,4 @@
+from pprint import pprint
 from typing import Any, List
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -5,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
 from app.api import deps
-from app.crud.crud_entry_tag import MissingDatabaseObject
+from app.models import Tag
 
 router = APIRouter()
 
@@ -55,18 +56,19 @@ def update_entry(
     """
     Update an entry.
     """
-    item = crud.entry.get(db=db, id=id)
-    if not item:
+    entry = crud.entry.get(db=db, id=id)
+    if not entry:
         raise HTTPException(status_code=404, detail="Tag not found")
-    if not crud.user.is_superuser(current_user) and (item.owner_id != current_user.id):
+    if not crud.user.is_superuser(current_user) and (entry.owner_id != current_user.id):
         raise HTTPException(status_code=400, detail="Not enough permissions")
-    item = crud.entry.update(db=db, db_obj=item, obj_in=entry_in)
-    try:
-        crud.entry_tag.add_tags_to_entry(db=db, entry_id=item.id, tag_ids=entry_in.tags)
-    except MissingDatabaseObject:
-        raise HTTPException(status_code=400, detail=f"Missing database object")
+    entry = crud.entry.update(db=db, db_obj=entry, obj_in=entry_in)
 
-    return item
+    # add the tags to the entry
+    for tag_id in entry_in.tags:
+        tag = crud.tag.get(db=db, id=tag_id)
+        entry.tags.append(tag)
+    db.commit()
+    return entry
 
 
 @router.get("/{id}", response_model=schemas.Entry)

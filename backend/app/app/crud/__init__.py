@@ -2,7 +2,6 @@ from .crud_item import item
 from .crud_user import user
 from .crud_tag import tag
 from .crud_entry import entry
-from .crud_entry_tag import entry_tag
 
 # For a new basic set of CRUD operations you could just do
 

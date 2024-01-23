@@ -19,5 +19,5 @@ class User(Base):
 
     items = relationship("Item", back_populates="owner")
 
-    tags = relationship("Tag", back_populates="owner")
-    entries = relationship("Entry", back_populates="owner")
+    tags = relationship('Tag', back_populates="owner")
+    entries = relationship('Entry', back_populates="owner")
