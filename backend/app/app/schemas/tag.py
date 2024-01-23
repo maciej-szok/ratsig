@@ -35,10 +35,10 @@ class TagInDBBase(TagBase):
 
 
 # Properties to return to client
-class Tag(TagInDBBase):
-    pass
+class TagPublic(TagBase):
+    id: int
+    type: TagType
+    text: str
 
-
-# Properties properties stored in DB
-class TagInDB(TagInDBBase):
-    pass
+    class Config:
+        orm_mode = True

@@ -9,7 +9,7 @@ from app.api import deps
 router = APIRouter()
 
 
-@router.get("/", response_model=List[schemas.Tag])
+@router.get("/", response_model=List[schemas.TagPublic])
 def read_tags(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
@@ -28,7 +28,7 @@ def read_tags(
     return tags
 
 
-@router.post("/", response_model=schemas.Tag)
+@router.post("/", response_model=schemas.TagPublic)
 def create_tag(
     *,
     db: Session = Depends(deps.get_db),
@@ -42,7 +42,7 @@ def create_tag(
     return tag
 
 
-@router.put("/{id}", response_model=schemas.Tag)
+@router.put("/{id}", response_model=schemas.TagPublic)
 def update_item(
     *,
     db: Session = Depends(deps.get_db),
@@ -62,7 +62,7 @@ def update_item(
     return item
 
 
-@router.get("/{id}", response_model=schemas.Tag)
+@router.get("/{id}", response_model=schemas.TagPublic)
 def read_item(
     *,
     db: Session = Depends(deps.get_db),

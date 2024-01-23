@@ -2,7 +2,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from app.schemas.tag import TagBase, TagInDBBase
+from app.schemas.tag import TagBase, TagInDBBase, TagPublic
 
 
 # Shared properties
@@ -25,16 +25,17 @@ class EntryInDBBase(EntryBase):
     id: int
     content: str
     owner_id: int
+    tags: list[TagInDBBase]
 
     class Config:
         orm_mode = True
 
 
 # Properties to return to client
-class Entry(EntryInDBBase):
-    tags: list[TagInDBBase]
+class EntryPublic(EntryBase):
+    id: int
+    content: str
+    tags: list[TagPublic]
 
-
-# Properties properties stored in DB
-class EntryInDB(EntryInDBBase):
-    pass
+    class Config:
+        orm_mode = True

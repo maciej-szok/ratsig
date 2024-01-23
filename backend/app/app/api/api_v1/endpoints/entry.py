@@ -6,12 +6,11 @@ from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
 from app.api import deps
-from app.models import Tag
 
 router = APIRouter()
 
 
-@router.get("/", response_model=list[schemas.Entry])
+@router.get("/", response_model=list[schemas.EntryPublic])
 def read_entries(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
@@ -31,7 +30,7 @@ def read_entries(
     return entries
 
 
-@router.post("/", response_model=schemas.Entry)
+@router.post("/", response_model=schemas.EntryPublic)
 def create_entry(
     *,
     db: Session = Depends(deps.get_db),
@@ -71,7 +70,7 @@ def update_entry(
     return entry
 
 
-@router.get("/{id}", response_model=schemas.Entry)
+@router.get("/{id}", response_model=schemas.EntryPublic)
 def read_entry(
     *,
     db: Session = Depends(deps.get_db),
