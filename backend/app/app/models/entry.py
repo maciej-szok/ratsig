@@ -4,7 +4,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
-from app.models.entry_tag import association_table
+from app.models.entry_tag import entry_tag_association_table
 
 if TYPE_CHECKING:
     from .user import User  # noqa: F401
@@ -18,4 +18,4 @@ class Entry(Base):
     owner_id = Column(Integer, ForeignKey("user.id"))
     owner = relationship("User", back_populates="entries")
 
-    tags = relationship('Tag', secondary=association_table, back_populates="entries")
+    tags = relationship('Tag', secondary=entry_tag_association_table, back_populates="entries")

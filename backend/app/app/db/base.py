@@ -5,4 +5,4 @@ from app.models.item import Item  # noqa
 from app.models.user import User  # noqa
 from app.models.tag import Tag  # noqa
 from app.models.entry import Entry  # noqa
-from app.models.entry_tag import association_table
+from app.models.entry_tag import entry_tag_association_table

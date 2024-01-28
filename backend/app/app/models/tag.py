@@ -7,7 +7,7 @@ from app.db.base_class import Base
 
 import enum
 
-from .entry_tag import association_table
+from .entry_tag import entry_tag_association_table
 
 
 class TagType(enum.Enum):
@@ -31,4 +31,4 @@ class Tag(Base):
     owner_id = Column(Integer, ForeignKey("user.id"))
     owner = relationship("User", back_populates="tags")
 
-    entries = relationship('Entry', secondary=association_table, back_populates="tags")
+    entries = relationship('Entry', secondary=entry_tag_association_table, back_populates="tags")

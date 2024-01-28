@@ -9,11 +9,18 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: rgba(21, 21, 21, 0.87);
+  background-color: #f5f5f5;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+
+#root {
+  /*TODO needs a more elegant solution, but for now i dont care*/
+  /*60px is header height*/
+  height: calc(100vh - 60px);
 }

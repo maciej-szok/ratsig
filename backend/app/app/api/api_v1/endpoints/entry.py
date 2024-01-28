@@ -67,6 +67,9 @@ def update_entry(
         tag = crud.tag.get(db=db, id=tag_id)
         entry.tags.append(tag)
     db.commit()
+
+    # refetch entry to get the updated tags
+    entry = crud.entry.get(db=db, id=id)
     return entry
 
 
