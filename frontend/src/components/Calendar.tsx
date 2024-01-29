@@ -1,7 +1,7 @@
 import {createEffect, createSignal, For, Show} from 'solid-js';
 
 type CalendarProps = {
-  selectedDate: Date;
+  selectedDate?: Date;
   onDateSelected: (date: Date) => void;
 };
 
@@ -57,7 +57,7 @@ function Calendar(props: CalendarProps) {
                     'bg-green-200': day === props.selectedDate?.getDate(),
                   }}
                   // on mouse down for more responsive feel
-                  onMouseDown={() => props.onDateSelected(new Date(props.selectedDate?.getFullYear(), props.selectedDate?.getMonth(), day))}
+                  onMouseDown={() => props.selectedDate && props.onDateSelected(new Date(props.selectedDate?.getFullYear(), props.selectedDate?.getMonth(), day))}
                 >
                   <Show when={day > 0}>
                     <span>{day}</span>
