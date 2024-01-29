@@ -1,5 +1,5 @@
 import axios from "axios";
-import {BASE_API_URL} from "./base.tsx";
+import {BASE_API_URL} from "./base.ts";
 import {Auth, BadGetAuthResponse, GetAuthResponse} from "../types/auth.ts";
 
 import {User} from "../types/user.ts";

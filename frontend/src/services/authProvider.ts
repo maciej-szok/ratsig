@@ -1,6 +1,7 @@
 import globalStore from "../stores/globalStore.ts";
 import {Auth} from "../types/auth.ts";
 import {userInfo, authenticateUser as authenticateUserRequest} from "../api/auth.ts";
+import axios from "axios";
 
 const {setAppState} = globalStore;
 
@@ -20,6 +21,7 @@ export const refreshAuth = async (): Promise<boolean> => {
       return false;
     }
 
+    axios.defaults.headers.common['Authorization'] = `Bearer ${auth.token}`;
     setAppState('data', 'auth', auth);
     setAppState('data', 'user', uInfo);
     return true;
@@ -41,6 +43,7 @@ export const authenticateUser = async (username: string, password: string): Prom
 
   setAppState('data', 'auth', authResponse);
   setAppState('data', 'user', uInfo);
+  axios.defaults.headers.common['Authorization'] = `Bearer ${authResponse.token}`;
   localStorage.setItem('auth', JSON.stringify(authResponse));
   return true;
 }
@@ -48,5 +51,6 @@ export const authenticateUser = async (username: string, password: string): Prom
 export const logOut = () => {
   setAppState('data', 'auth', undefined);
   setAppState('data', 'user', undefined);
+  axios.defaults.headers.common['Authorization'] = '';
   localStorage.removeItem('auth');
 }

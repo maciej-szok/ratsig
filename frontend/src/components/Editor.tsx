@@ -1,15 +1,18 @@
-import {createSignal} from "solid-js";
+type EditorProps = {
+  value: string;
+  onChange: (value: string) => void;
+}
 
-function Editor () {
-  const [value, setValue] = createSignal("");
-
+function Editor (props: EditorProps) {
   return (
     <div>
       <h1>Editor</h1>
       <textarea
-        value={value()}
-        onChange={(e) => setValue(e.target.value)}
-        style={{ width: '100%', height: '200px' }}
+        value={props.value}
+        onChange={(e) => props.onChange(e.target.value)}
+        style={{ width: '100%', height: '400px', "font-family": "monospace"}}
+        class="border border-gray-900 bg-white p-2"
+        placeholder="Write your entry here..."
       />
     </div>
   );

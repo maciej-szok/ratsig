@@ -1,4 +1,5 @@
-from typing import List
+import datetime
+from typing import List, Optional
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
@@ -9,6 +10,12 @@ from app.schemas.entry import EntryCreate, EntryUpdate
 
 
 class CRUDEntry(CRUDBase[Entry, EntryCreate, EntryUpdate]):
+
+    def get_multi(
+        self, db: Session, *, skip: int = 0, limit: int = 100
+    ) -> List[Entry]:
+        return db.query(self.model).order_by(Entry.date.desc()).offset(skip).limit(limit).all()
+
     def create_with_owner(
         self, db: Session, *, obj_in: EntryCreate, owner_id: int
     ) -> Entry:
@@ -30,5 +37,7 @@ class CRUDEntry(CRUDBase[Entry, EntryCreate, EntryUpdate]):
             .all()
         )
 
+    def get(self, db: Session, date: datetime.date) -> Optional[Entry]:
+        return db.query(self.model).filter(self.model.date == date).first()
 
 entry = CRUDEntry(Entry)

@@ -1,8 +1,8 @@
 import './App.css'
 import Panel from "./components/layout/Panel.tsx";
-import EditorPanel from "./components/layout/EditorPanel.tsx";
+import DayEditorPanel from "./components/layout/DayEditorPanel.tsx";
 import Calendar from "./components/Calendar.tsx";
-import {createEffect, Match, onMount, Switch} from "solid-js";
+import {Match, onMount, Switch} from "solid-js";
 import globalStore from "./stores/globalStore.ts";
 import Landing from "./components/layout/Landing.tsx";
 import {logOut, refreshAuth} from "./services/authProvider.ts";
@@ -14,12 +14,6 @@ function App() {
     // TODO some loader taking the whole page would be nice here
     //  so that the interface does not jump around
     void refreshAuth();
-  });
-
-  createEffect(() => {
-    console.log('ref')
-
-    console.log('selected date changed', appState.data.selectedDate)
   });
 
   return (
@@ -43,7 +37,7 @@ function App() {
               <Calendar selectedDate={appState.data.selectedDate} onDateSelected={(d) => setAppState('data', 'selectedDate', d)}/>
             </Panel>
             <Panel class="col-span-7">
-              <EditorPanel />
+              <DayEditorPanel />
             </Panel>
           </div>
         </div>

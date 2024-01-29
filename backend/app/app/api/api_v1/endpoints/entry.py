@@ -1,6 +1,8 @@
+import datetime
 from pprint import pprint
 from typing import Any, List
 
+import sqlalchemy.exc
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -30,60 +32,81 @@ def read_entries(
     return entries
 
 
-@router.post("/", response_model=schemas.EntryPublic)
+@router.post("/{date}", response_model=schemas.EntryPublic)
 def create_entry(
     *,
     db: Session = Depends(deps.get_db),
-    item_in: schemas.EntryCreate,
+    date: str,
+    entry_in: schemas.EntryCreate,
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
     Create new entry.
     """
-    tag = crud.entry.create_with_owner(db=db, obj_in=item_in, owner_id=current_user.id)
-    return tag
+    try:
+        entry_in.date = datetime.date(*[int(x) for x in date.split("-")])
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format")
+    try:
+        entry = crud.entry.create_with_owner(db=db, obj_in=entry_in, owner_id=current_user.id)
+    except sqlalchemy.exc.IntegrityError:
+        raise HTTPException(status_code=400, detail="Entry already exists")
+
+    return entry
 
 
-@router.put("/{id}", response_model=None)
+@router.put("/{date}", response_model=None)
 def update_entry(
     *,
     db: Session = Depends(deps.get_db),
-    id: int,
+    date: str,
     entry_in: schemas.EntryUpdate,
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
     Update an entry.
     """
-    entry = crud.entry.get(db=db, id=id)
+    try:
+        date = datetime.date(*[int(x) for x in date.split("-")])
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format")
+
+    entry = crud.entry.get(db=db, date=date)
     if not entry:
-        raise HTTPException(status_code=404, detail="Tag not found")
+        raise HTTPException(status_code=404, detail="Entry not found")
     if not crud.user.is_superuser(current_user) and (entry.owner_id != current_user.id):
         raise HTTPException(status_code=400, detail="Not enough permissions")
     entry = crud.entry.update(db=db, db_obj=entry, obj_in=entry_in)
 
     # add the tags to the entry
-    for tag_id in entry_in.tags:
-        tag = crud.tag.get(db=db, id=tag_id)
-        entry.tags.append(tag)
+    if entry_in.tags:
+        for tag_id in entry_in.tags:
+            tag = crud.tag.get(db=db, id=tag_id)
+            entry.tags.append(tag)
     db.commit()
 
     # refetch entry to get the updated tags
-    entry = crud.entry.get(db=db, id=id)
+    entry = crud.entry.get(db=db, date=date)
     return entry
 
 
-@router.get("/{id}", response_model=schemas.EntryPublic)
+@router.get("/{date}", response_model=schemas.EntryPublic)
 def read_entry(
     *,
     db: Session = Depends(deps.get_db),
-    id: int,
+    date: str,
     current_user: models.User = Depends(deps.get_current_active_user),
 ) -> Any:
     """
     Get entry by ID.
     """
-    item = crud.entry.get(db=db, id=id)
+    try:
+        date = datetime.date(*[int(x) for x in date.split("-")])
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format")
+
+
+    item = crud.entry.get(db=db, date=date)
     if not item:
         raise HTTPException(status_code=404, detail="Item not found")
     if not crud.user.is_superuser(current_user) and (item.owner_id != current_user.id):

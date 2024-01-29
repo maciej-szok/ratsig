@@ -7,7 +7,7 @@ import {Auth} from "../types/auth.ts";
 type GlobalStoreData = {
   auth?: Auth;
   user?: User;
-  selectedDate?: Date;
+  selectedDate: Date;
 }
 
 type GlobalStore = {
@@ -19,7 +19,7 @@ type GlobalStore = {
 function createGlobalStore() {
   const [appState, setAppState] = createStore<GlobalStore>({
     data: {
-      selectedDate: new Date(),
+      selectedDate: new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDate())
     },
     get isAuthenticated() {
       return !!this.data.auth;
