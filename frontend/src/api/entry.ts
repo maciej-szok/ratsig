@@ -1,7 +1,7 @@
 import axios from "axios";
 import {BASE_API_URL} from "./base.ts";
 import {CreateEntryResponse, GetEntryResponse, UpdateEntryResponse} from "../types/entry.ts";
-import {dateToIso} from "../utils/dateToIso.ts";
+import {dateToIso} from "../utils/date.ts";
 
 type GetEntryRequest = [true, GetEntryResponse] | [false, {detail: string}]
 export const getEntry = async (date: Date): Promise<GetEntryRequest> => {
