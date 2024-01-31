@@ -1,3 +1,16 @@
+export type EntryBase = {
+  id: number;
+  content: string;
+  date: Date;
+}
+
+export type Entry = EntryBase & {
+  meta: {
+    loading: boolean;
+  }
+}
+
+
 export type CreateEntryResponse = {
   id: number;
   content: string;
