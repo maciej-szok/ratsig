@@ -5,6 +5,8 @@ type CalendarProps = {
   onDateSelected: (date: Date) => void;
 };
 
+// TODO make dates after today unselectable
+
 function Calendar(props: CalendarProps) {
   const [grid, setGrid] = createSignal<Array<Array<number>>>([[]]);
   const [monthName, setMonthName] = createSignal<string>('');
