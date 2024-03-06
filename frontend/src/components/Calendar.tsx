@@ -9,8 +9,6 @@ function Calendar(props: CalendarProps) {
   const [grid, setGrid] = createSignal<Array<Array<number>>>([[]]);
   const [monthName, setMonthName] = createSignal<string>('');
 
-  console.log('rerender')
-
   createEffect(() => {
     if(!props.selectedDate) {
       return;

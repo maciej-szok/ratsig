@@ -28,6 +28,7 @@ function Landing() {
       setErrorMsg('Invalid username or password');
       return;
     }
+    console.log('logged in');
   }
 
   return (

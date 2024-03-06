@@ -7,7 +7,6 @@ type GetEntryRequest = [true, GetEntryResponse] | [false, {detail: string}]
 export const getEntry = async (date: Date): Promise<GetEntryRequest> => {
   try {
     const isoDate = dateToIso(date)
-    console.log(isoDate);
 
     const response = await axios.get<GetEntryResponse>(`${BASE_API_URL}/entries/${isoDate}`);
     return [true, response.data];
