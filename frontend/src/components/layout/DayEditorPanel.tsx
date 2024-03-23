@@ -3,6 +3,7 @@ import {createEffect} from "solid-js";
 import globalStore from "../../stores/globalStore.ts";
 import {createEntry, getEntry, updateEntry} from "../../api/entry.ts";
 import {dateToIso} from "../../utils/date.ts";
+import TagsSelector from "../TagsSelector.tsx";
 
 function DayEditorPanel() {
   const {appState, setAppState} = globalStore;
@@ -13,7 +14,7 @@ function DayEditorPanel() {
     const value = appState.data.entries[date]?.content || '';
 
     console.log('saving entry');
-    const [success, _] = await updateEntry(appState.data.selectedDate, value);
+    const [success, _] = await updateEntry(appState.data.selectedDate, {content: value});
     if (success) {
       console.log('saved entry');
       return;
@@ -76,6 +77,9 @@ function DayEditorPanel() {
         // set the value in the global store
       }}/>
       <button class="border border-gray-900 m-2" onClick={() => saveEntry(dateToIso(appState.data.selectedDate))}>SAVE</button>
+      <div class="mt-4">
+        <TagsSelector />
+      </div>
     </div>
   );
 }

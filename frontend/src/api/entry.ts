@@ -29,11 +29,11 @@ export const createEntry = async (date: Date, content: string): Promise<CreateEn
 }
 
 type UpdateEntryRequest = [true, UpdateEntryResponse] | [false, {detail: string}];
-export const updateEntry = async (date: Date, content: string): Promise<UpdateEntryRequest> => {
+export const updateEntry = async (date: Date, fields: {content?: string, tags?: number[]} = {}): Promise<UpdateEntryRequest> => {
   try {
     const isoDate = dateToIso(date)
 
-    const response = await axios.put<UpdateEntryResponse>(`${BASE_API_URL}/entries/${isoDate}`, {content});
+    const response = await axios.put<UpdateEntryResponse>(`${BASE_API_URL}/entries/${isoDate}`, fields);
     return [true, response.data];
   } catch (error) {
     return [false, { detail: "Entry does not exist" }];
