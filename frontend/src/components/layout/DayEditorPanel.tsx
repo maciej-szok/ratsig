@@ -1,9 +1,10 @@
 import Editor from "../Editor.tsx";
-import {createEffect} from "solid-js";
+import {createEffect, For, Show} from "solid-js";
 import globalStore from "../../stores/globalStore.ts";
 import {createEntry, getEntry, updateEntry} from "../../api/entry.ts";
 import {dateToIso} from "../../utils/date.ts";
 import TagsSelector from "../TagsSelector.tsx";
+import Summary from "../Summary.tsx";
 
 function DayEditorPanel() {
   const {appState, setAppState} = globalStore;
@@ -31,12 +32,12 @@ function DayEditorPanel() {
   const fetchEntry = async (date: Date) => {
     console.log('fetching entry');
     const [success, entry] = await getEntry(date);
-    console.log('e', entry)
     if (success) {
       setAppState('data', 'entries', dateToIso(date), (prevState) => {
         return {
           ...(prevState || {}),
           content: entry.content,
+          tags: entry.tags
         }
       });
     } else {
@@ -48,6 +49,7 @@ function DayEditorPanel() {
         return {
           ...(prevState || {}),
           content: '',
+          tags: [],
         }
       });
     }
@@ -61,7 +63,6 @@ function DayEditorPanel() {
 
     await fetchEntry(appState.data.selectedDate);
   });
-
   return (
     <div>
       <Editor value={appState.data.entries[dateToIso(globalStore.appState.data.selectedDate)]?.content || ''} onInput={(value) => {
@@ -76,9 +77,22 @@ function DayEditorPanel() {
         });
         // set the value in the global store
       }}/>
+      <div>
+        <span>Tags:</span>
+        <Show when={appState.data.entries[dateToIso(globalStore.appState.data.selectedDate)]?.tags} fallback={<span>No tags</span>}>
+            <For each={appState.data.entries[dateToIso(globalStore.appState.data.selectedDate)].tags}>
+              {(tag) => (
+                <span>{tag.text}</span>
+              )}
+            </For>
+        </Show>
+      </div>
       <button class="border border-gray-900 m-2" onClick={() => saveEntry(dateToIso(appState.data.selectedDate))}>SAVE</button>
       <div class="mt-4">
         <TagsSelector />
+      </div>
+      <div class="mt-4">
+        <Summary/>
       </div>
     </div>
   );

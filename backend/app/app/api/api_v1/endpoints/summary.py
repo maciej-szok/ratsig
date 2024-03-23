@@ -18,7 +18,7 @@ class SummaryIn(BaseModel):
     date_to: str
 
 
-@router.get("/")
+@router.post("/")
 def generate_summary(
     summary_in: SummaryIn,
     db: Session = Depends(deps.get_db),

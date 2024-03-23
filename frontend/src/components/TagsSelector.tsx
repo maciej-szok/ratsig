@@ -3,6 +3,7 @@ import {createSignal, For} from "solid-js";
 import {TagBase} from "../types/tag.ts";
 import {updateEntry} from "../api/entry.ts";
 import globalStore from "../stores/globalStore.ts";
+import {dateToIso} from "../utils/date.ts";
 
 type TagInInterface = {
   selected: boolean;
@@ -11,22 +12,36 @@ type TagInInterface = {
 function TagsSelector() {
   const [tags, setTags] = createSignal<TagInInterface[]>([]);
   const [selectedTag, setSelectedTag] = createSignal<number | null>(null);
-  const {appState} = globalStore;
+  const {appState, setAppState} = globalStore;
 
   const fetchTags = async () => {
     const [success, tags] = await getTags();
     setTags(tags);
-    console.log('tags', tags);
+    if(tags.length){
+      setSelectedTag(tags[0].id);
+    }
   }
 
   const addTag = async () => {
-    console.log('add tag', selectedTag())
-    console.log('saving entry');
-    // const [success, _] = await updateEntry(appState.data.selectedDate, {tags: value});
-    // if (success) {
-    //   console.log('saved entry');
-    //   return;
-    // }
+    const entryTags = appState.data.entries[dateToIso(globalStore.appState.data.selectedDate)].tags;
+
+    const newTags = new Set(entryTags.map((t) => t.id) || []);
+    const selected = selectedTag();
+    if(selected != null){
+      newTags.add(selected);
+    }
+    const [success, entry] = await updateEntry(appState.data.selectedDate, {tags: Array.from(newTags)});
+    if (success) {
+      console.log('saved entry');
+      setAppState('data', 'entries', dateToIso(globalStore.appState.data.selectedDate), (prevState) => {
+        return {
+          ...(prevState || {}),
+          content: entry.content,
+          tags: entry.tags
+        }
+      });
+      return;
+    }
   }
 
   void fetchTags();
@@ -42,7 +57,7 @@ function TagsSelector() {
           )}
         </For>
       </select>
-      <button onClick={addTag}>Add tag</button>
+      <button onClick={addTag} disabled={!selectedTag()}>Add tag</button>
       <span>{JSON.stringify(tags)}</span>
     </div>
   );

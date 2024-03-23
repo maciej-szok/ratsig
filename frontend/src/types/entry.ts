@@ -1,7 +1,10 @@
+import {TagBase} from "./tag.ts";
+
 export type EntryBase = {
   id: number;
   content: string;
   date: Date;
+  tags: TagBase[];
 }
 
 export type Entry = EntryBase & {
@@ -14,7 +17,7 @@ export type Entry = EntryBase & {
 export type CreateEntryResponse = {
   id: number;
   content: string;
-  tags: Array<object>;
+  tags: TagBase[];
   date: Date;
 };
 

@@ -30,7 +30,6 @@ function createGlobalStore() {
   });
 
   const authenticate = (auth: Auth, user?: User) => {
-    console.log('setting auth', auth, user)
     setAppState('data','auth', auth);
     if (user) {
       setAppState('data','user', user);

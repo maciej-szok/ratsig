@@ -16,8 +16,6 @@ function Calendar(props: CalendarProps) {
       return;
     }
 
-    console.log('selected date changed', props.selectedDate)
-
     // Get the first day of the current month
     let firstDay = new Date(props.selectedDate.getFullYear(), props.selectedDate.getMonth(), 1);
 
