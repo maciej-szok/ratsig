@@ -10,6 +10,7 @@ App for [INTP](https://www.16personalities.com/intp-personality) folks to keep t
 
 ## This project is WIP
 Anyway, here are the mockups. I don't really spend a lot of time on styling and UX just until the product is almost MVP.
+
 <img src="https://iili.io/Jj2ncf2.png" width="500">
 <img src="https://iili.io/Jj2xLAX.png" width="500">
 
