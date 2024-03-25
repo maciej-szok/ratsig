@@ -55,7 +55,7 @@ def create_entry(
     return entry
 
 
-@router.put("/{date}", response_model=None)
+@router.put("/{date}", response_model=schemas.EntryPublic)
 def update_entry(
     *,
     db: Session = Depends(deps.get_db),
@@ -79,10 +79,12 @@ def update_entry(
     entry = crud.entry.update(db=db, db_obj=entry, obj_in=entry_in)
 
     # add the tags to the entry
-    if entry_in.tags:
+    if entry_in.tags is not None:
+        new_tags = []
         for tag_id in entry_in.tags:
             tag = crud.tag.get(db=db, id=tag_id)
-            entry.tags.append(tag)
+            new_tags.append(tag)
+        entry.tags = new_tags
     db.commit()
 
     # refetch entry to get the updated tags
